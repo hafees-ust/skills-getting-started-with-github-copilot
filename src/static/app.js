@@ -16,18 +16,41 @@ document.addEventListener("DOMContentLoaded", () => {
       // Populate activities list
       Object.entries(activities).forEach(([name, details]) => {
         const activityCard = document.createElement("div");
-        activityCard.className = "activity-card";
+          activityCard.className = "activity-card";
 
-        const spotsLeft = details.max_participants - details.participants.length;
+          const spotsLeft = details.max_participants - details.participants.length;
 
-        activityCard.innerHTML = `
-          <h4>${name}</h4>
-          <p>${details.description}</p>
-          <p><strong>Schedule:</strong> ${details.schedule}</p>
-          <p><strong>Availability:</strong> ${spotsLeft} spots left</p>
-        `;
+          // Build participants section (bulleted list or muted message)
+          let participantsHTML = '';
+          if (details.participants && details.participants.length > 0) {
+            participantsHTML = `
+              <div class="participants">
+                <strong>Participants:</strong>
+                <ul class="participants-list">
+                  ${details.participants
+                    .map((p) => `<li><span class="participant-badge">${p}</span></li>`)
+                    .join("")}
+                </ul>
+              </div>
+            `;
+          } else {
+            participantsHTML = `
+              <div class="participants">
+                <strong>Participants:</strong>
+                <p class="muted">No participants yet.</p>
+              </div>
+            `;
+          }
 
-        activitiesList.appendChild(activityCard);
+          activityCard.innerHTML = `
+            <h4>${name}</h4>
+            <p>${details.description}</p>
+            <p><strong>Schedule:</strong> ${details.schedule}</p>
+            <p><strong>Availability:</strong> ${spotsLeft} spots left</p>
+            ${participantsHTML}
+          `;
+
+          activitiesList.appendChild(activityCard);
 
         // Add option to select dropdown
         const option = document.createElement("option");
